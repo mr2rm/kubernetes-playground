@@ -1,0 +1,47 @@
+---
+# API group we're sending the request to
+apiVersion: apps/v1
+# Kind of K8s object
+kind: Deployment
+metadata:
+  # Name of the deployment
+  name: pod-info-deployment
+  # The namespace that pods should be in
+  namespace: development
+  # Labels of the deployement
+  labels:
+    app: pod-info
+spec:
+  # The number of replicas of container to run (for HA)
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pod-info
+  template:
+    metadata:
+      labels:
+        app: pod-info
+    spec:
+      # Configuration of container runs in each pod
+      containers:
+        # The name of container
+        - name: pod-info-container
+          # Image and its version to be pulled from Docker registry
+          image: kimschles/pod-info-app:latest
+          ports:
+            # Direct traffic to the container's port
+            - containerPort: 3000
+          # Environment variables
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
