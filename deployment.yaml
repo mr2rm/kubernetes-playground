@@ -29,7 +29,7 @@ spec:
           # Image and its version to be pulled from Docker registry
           image: kimschles/pod-info-app:latest
           ports:
-            # Direct traffic to the container's port
+            # Accept traffic at port 3000
             - containerPort: 3000
           # Environment variables
           env:
